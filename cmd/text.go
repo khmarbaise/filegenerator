@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"log"
@@ -46,12 +45,16 @@ func text(ctx *cli.Context) error {
 		name = ctx.String("name")
 	}
 
+	stringLength := 20
+	nrOfEntriesPerLine := 10
+	lines := 10000
+
 	size := 200
 	if ctx.IsSet("size") {
 		size = ctx.Int("size")
 	}
 
-	fmt.Printf("The size: %v\n", size)
+	fmt.Printf("The size: %v %s\n", size, name)
 
 	file, err := os.Create(fmt.Sprintf("./%s", name))
 	if err != nil {
@@ -59,17 +62,13 @@ func text(ctx *cli.Context) error {
 	}
 	defer file.Close()
 
-	writer := bufio.NewWriterSize(file, 10)
-	linesToWrite := []string{"This is an example", "to show how", "to write to a file", "line by line."}
-	for _, line := range linesToWrite {
-		bytesWritten, err := writer.WriteString(line + "\n")
-		if err != nil {
-			log.Fatalf("Got error while writing to a file. Err: %s", err.Error())
+	for lnr := 0; lnr < lines; lnr++ {
+		file.WriteString(fmt.Sprintf("%d ", lnr))
+		for entry := 0; entry < nrOfEntriesPerLine; entry++ {
+			file.WriteString(fmt.Sprintf("%s ", randomString(stringLength)))
 		}
-		fmt.Printf("Bytes Written: %d\n", bytesWritten)
-		fmt.Printf("Available: %d\n", writer.Available())
-		fmt.Printf("Buffered : %d\n", writer.Buffered())
+		file.WriteString(fmt.Sprintf("\n"))
 	}
-	writer.Flush()
+
 	return nil
 }
