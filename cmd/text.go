@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"log"
+	"math/rand"
 	"os"
 )
 
@@ -27,6 +28,16 @@ var CmdText = cli.Command{
 			Usage:   "The name of the file.",
 		},
 	},
+}
+
+func randomString(n int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+
+	s := make([]rune, n)
+	for i := range s {
+		s[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(s)
 }
 
 func text(ctx *cli.Context) error {
