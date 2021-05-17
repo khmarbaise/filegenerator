@@ -8,21 +8,35 @@ import (
 	"os"
 )
 
+const (
+	optionNumberOfLines          = "lines"
+	optionNumberOfEntriesPerLine = "entries"
+	optionName                   = "name"
+)
+
 //CmdText offers the text command with all it's options.
 var CmdText = cli.Command{
 	Name:        "text",
 	Aliases:     []string{"txt"},
 	Usage:       "Create a text based file.",
 	Description: "text ...",
-	Action:      text,
+	Action:      actionText,
 	Flags: []cli.Flag{
 		&cli.IntFlag{
-			Name:    "size",
-			Aliases: []string{"s"},
-			Usage:   "The size of the file which will be generate",
+			Name:    optionNumberOfLines,
+			Aliases: []string{"nol"},
+			Usage:   "The number of lines which should be generated",
+			Value:   10000,
+		},
+		&cli.IntFlag{
+			Name:        optionNumberOfEntriesPerLine,
+			Aliases:     []string{"noe"},
+			Usage:       "The number of entries per line",
+			Value:       10,
+			DefaultText: "10",
 		},
 		&cli.StringFlag{
-			Name:    "name",
+			Name:    optionName,
 			Aliases: []string{"n"},
 			Usage:   "The name of the file.",
 		},
@@ -39,22 +53,26 @@ func randomString(n int) string {
 	return string(s)
 }
 
-func text(ctx *cli.Context) error {
+func actionText(ctx *cli.Context) error {
 	name := "generated.txt"
-	if ctx.IsSet("name") {
-		name = ctx.String("name")
+
+	if ctx.IsSet(optionName) {
+		name = ctx.String(optionName)
 	}
 
 	stringLength := 20
-	nrOfEntriesPerLine := 10
-	lines := 10000
 
-	size := 200
-	if ctx.IsSet("size") {
-		size = ctx.Int("size")
+	nrOfEntriesPerLine := 10
+	if ctx.IsSet(optionNumberOfEntriesPerLine) {
+		nrOfEntriesPerLine = ctx.Int(optionNumberOfEntriesPerLine)
 	}
 
-	fmt.Printf("The size: %v %s\n", size, name)
+	lines := 10000
+	if ctx.IsSet(optionNumberOfLines) {
+		lines = ctx.Int(optionNumberOfLines)
+	}
+
+	//	fmt.Printf("The size: %v %s\n", size, name)
 
 	file, err := os.Create(fmt.Sprintf("./%s", name))
 	if err != nil {
