@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"time"
 )
 
 const (
@@ -61,6 +62,9 @@ func randomString(n int) string {
 }
 
 func actionText(ctx *cli.Context) error {
+
+	rand.Seed(time.Now().UnixNano())
+
 	name := ctx.String(optionName)
 
 	stringLength := ctx.Int(optionSize)
