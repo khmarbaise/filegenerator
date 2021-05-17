@@ -18,7 +18,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "fgen"
 	app.Usage = "How to use fgen"
-	app.Description = "file generator"
+	app.Description = "file generator is intended to generate text files for testing purposes."
 	app.Version = Version + formatBuiltWith(Tags)
 	app.EnableBashCompletion = true
 	app.Commands = []*cli.Command{
