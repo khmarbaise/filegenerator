@@ -15,6 +15,7 @@ const (
 	optionNumberOfEntriesPerLine = "entries"
 	optionName                   = "name"
 	optionSize                   = "size"
+	buffer64k                    = 64 * 1024
 )
 
 //CmdText offers the text command with all it's options.
@@ -82,7 +83,7 @@ func actionText(ctx *cli.Context) error {
 	}
 	defer file.Close()
 
-	bufferedWriter := bufio.NewWriterSize(file, 64*1024)
+	bufferedWriter := bufio.NewWriterSize(file, buffer64k)
 
 	defer bufferedWriter.Flush()
 
