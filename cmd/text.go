@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"log"
@@ -81,12 +82,16 @@ func actionText(ctx *cli.Context) error {
 	}
 	defer file.Close()
 
+	bufferedWriter := bufio.NewWriterSize(file, 64*1024)
+
+	defer bufferedWriter.Flush()
+
 	for lnr := 0; lnr < lines; lnr++ {
-		file.WriteString(fmt.Sprintf("%d ", lnr))
+		bufferedWriter.WriteString(fmt.Sprintf("%d ", lnr))
 		for entry := 0; entry < nrOfEntriesPerLine; entry++ {
-			file.WriteString(fmt.Sprintf("%s ", randomString(stringLength)))
+			bufferedWriter.WriteString(fmt.Sprintf("%s ", randomString(stringLength)))
 		}
-		file.WriteString(fmt.Sprintf("\n"))
+		bufferedWriter.WriteString(fmt.Sprintf("\n"))
 	}
 
 	return nil
